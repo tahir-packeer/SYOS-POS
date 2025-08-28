@@ -262,7 +262,7 @@ mvn surefire-report:report
 # Database Configuration
 db.url=jdbc:mysql://localhost:3306/syos
 db.username=root
-db.password=Tahir@9900
+db.password=9900@tahir
 
 # Business Rules
 business.reorder.threshold=50

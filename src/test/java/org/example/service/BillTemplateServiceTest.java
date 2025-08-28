@@ -101,7 +101,7 @@ public class BillTemplateServiceTest {
         BillItem item1 = new BillItem("ITEM001", "Expensive Item", 1, 1000.00);
 
         Bill bill = new Bill(123, 1001, new Date(), 1,
-                Arrays.asList(item1), 500.00, TransactionType.IN_STORE, 500.00);
+                Arrays.asList(item1), 1000.00, TransactionType.IN_STORE, 500.00);
 
         // Mock customer DAO
         when(customerDAO.getCustomerById(1)).thenReturn(Optional.of(customer));
@@ -109,15 +109,16 @@ public class BillTemplateServiceTest {
         // Generate template
         String template = billTemplateService.generateBillTemplate(bill);
 
-        // Verify discount is printed correctly
-        assertTrue(template.contains("Discount:"), "Discount line should be present");
-        assertTrue(template.contains("Rs. 500.00"), "Discount amount should be present");
-        assertTrue(template.contains("(50.0%)"), "Discount percentage should be 50%");
+        // Verify discount is printed correctly (case-insensitive, manual discount)
+        assertTrue(template.toLowerCase().contains("discount:"), "Discount line should be present");
+        assertTrue(template.toLowerCase().contains("Rs. 500.00"), "Discount amount should be present");
+        assertTrue(template.contains("(50%)"), "Discount percentage should be 50%");
 
         // Verify totals are correct
         assertTrue(template.contains("Subtotal:                              Rs. 1000.00"));
+        assertTrue(template.contains("Discount:                              Rs.  500.00"));
         assertTrue(template.contains("Total Amount:                          Rs.  500.00"));
-        assertTrue(template.contains("Cash Received:                         Rs.  500.00"));
-        assertTrue(template.contains("Change:                                Rs.   0.00"));
+        assertTrue(template.contains("Cash Received:                         Rs.  1000.00"));
+        assertTrue(template.contains("Change:                                Rs.   500.00"));
     }
 }

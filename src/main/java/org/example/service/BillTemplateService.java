@@ -77,10 +77,9 @@ public class BillTemplateService {
 
         // Header
         template.append("=".repeat(50)).append("\n");
-        template.append("              SYOS - SYNEX OUTLET STORE\n");
+        template.append("              SYNEX OUTLET STORE\n");
         template.append("=".repeat(50)).append("\n");
-        template.append("              OFFICIAL RECEIPT\n");
-        template.append("=".repeat(50)).append("\n\n");
+        
 
         // Bill Information
         template.append("Bill ID: ").append(bill.getBillId()).append("\n");
@@ -131,7 +130,7 @@ public class BillTemplateService {
         template.append("-".repeat(50)).append("\n\n");
 
         // Footer
-        template.append("Thank you for shopping with SYOS!\n");
+        template.append("Thank you for shopping with SYNEX OUTLET STORE!\n");
         template.append("Please keep this receipt for your records.\n");
         template.append("For any queries, please contact us.\n\n");
         template.append("Generated on: ").append(dateFormat.format(new Date())).append("\n");
