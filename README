@@ -65,6 +65,7 @@ src/
 │   │   ├── controller/                   # Controller layer
 │   │   │   ├── AuthenticationController.java
 │   │   │   ├── BillingController.java
+│   │   │   ├── BillTemplateController.java
 │   │   │   ├── ItemController.java
 │   │   │   ├── ReportController.java
 │   │   │   └── StockController.java
@@ -76,8 +77,10 @@ src/
 │   │   │   ├── BillItem.java
 │   │   │   ├── Customer.java
 │   │   │   ├── Item.java
+│   │   │   ├── SerialNumberGenerator.java
 │   │   │   ├── StockBatch.java
 │   │   │   ├── ShelfStock.java
+│   │   │   ├── TransactionType.java
 │   │   │   ├── User.java
 │   │   │   └── WebsiteInventory.java
 │   │   ├── service/                     # Business logic services
@@ -85,6 +88,8 @@ src/
 │   │   │   ├── BillingService.java
 │   │   │   ├── ReportService.java
 │   │   │   └── StockService.java
+│   │   │   └── BillTemplateService.java
+│   │   │   └── DiscountService.java
 │   │   ├── util/                        # Utility classes
 │   │   │   ├── PasswordUtils.java
 │   │   │   └── ValidationUtils.java
