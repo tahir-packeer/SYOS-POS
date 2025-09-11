@@ -192,4 +192,4 @@ The system uses the following main tables:
 
 ---
 
-**SYOS-POS** - Professional Point of Sale System for Modern Retail
+**SYOS-POS** - 

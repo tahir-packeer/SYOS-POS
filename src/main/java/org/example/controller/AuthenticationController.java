@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/controller/AuthenticationController.java
 package org.example.controller;
 
 import org.example.model.User;

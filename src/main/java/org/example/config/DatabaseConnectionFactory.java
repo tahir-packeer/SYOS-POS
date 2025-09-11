@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/config/DatabaseConnectionFactory.java
 package org.example.config;
 
 import com.zaxxer.hikari.HikariConfig;
