@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/view/ManagerView.java
 package org.example.view;
 
 import org.example.controller.*;
@@ -7,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
-/**
- * View for manager operations
- */
+
 public class ManagerView {
     private static final Logger logger = LoggerFactory.getLogger(ManagerView.class);
     private BillingController billingController;
@@ -73,9 +70,9 @@ public class ManagerView {
                         break;
                     case "9":
                         authController.logout();
-                        return true; // Return to login
+                        return true; 
                     case "0":
-                        return false; // Exit application
+                        return false; 
                     default:
                         System.out.println("✗ Invalid option. Please try again.");
                 }
@@ -127,7 +124,7 @@ public class ManagerView {
                         stockController.viewExpiringStock(scanner);
                         break;
                     case "0":
-                        return; // Back to manager menu
+                        return; 
                     default:
                         System.out.println("✗ Invalid option. Please try again.");
                 }

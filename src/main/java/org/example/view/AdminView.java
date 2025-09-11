@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/view/AdminView.java
 package org.example.view;
 
 import org.example.controller.*;
