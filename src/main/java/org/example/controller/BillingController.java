@@ -39,102 +39,6 @@ public class BillingController {
         processTransaction(scanner, TransactionType.ONLINE);
     }
 
-    private void processTransaction(Scanner scanner, TransactionType transactionType) {
-        System.out.println("\n" + "=".repeat(50));
-        System.out.printf("           %s BILLING%n", transactionType.getValue());
-        System.out.println("=".repeat(50));
-
-        // Get customer information
-        System.out.print("Customer phone number: ");
-        String phone = scanner.nextLine().trim();
-
-        if (!isValidPhoneNumber(phone)) {
-            System.out.println("✗ Invalid phone number format. Must be 10 digits.");
-            return;
-        }
-
-        System.out.print("Customer name: ");
-        String name = scanner.nextLine().trim();
-
-        if (name.isEmpty()) {
-            System.out.println("✗ Customer name cannot be empty.");
-            return;
-        }
-
-        // Collect items
-        List<BillItem> billItems = collectItems(scanner, transactionType);
-        if (billItems.isEmpty()) {
-            System.out.println("✗ No valid items added to bill.");
-            return;
-        }
-
-        // Display bill summary
-        displayBillSummary(billItems);
-
-        // Calculate subtotal
-        double subtotal = billItems.stream()
-                .mapToDouble(item -> item.getQuantity() * billingService.getItemPrice(item.getItemCode()))
-                .sum();
-
-        // Get discount
-        double discount = getDiscountInput(scanner, subtotal);
-        double totalAmount = subtotal - discount;
-
-        // Debug logging
-        logger.debug("Discount entered: {}, Subtotal: {}, Total Amount: {}", discount, subtotal, totalAmount);
-
-        // Get payment
-        double cashReceived = 0;
-        if (transactionType == TransactionType.IN_STORE) {
-            System.out.printf("Subtotal: Rs. %.2f%n", subtotal);
-            System.out.printf("Discount: Rs. %.2f%n", discount);
-            System.out.printf("Total amount: Rs. %.2f%n", totalAmount);
-            System.out.print("Cash received: Rs. ");
-
-            try {
-                cashReceived = Double.parseDouble(scanner.nextLine());
-                if (cashReceived < totalAmount) {
-                    System.out.println("✗ Insufficient cash received.");
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("✗ Invalid amount entered.");
-                return;
-            }
-        } else {
-            cashReceived = totalAmount; // Online transactions are prepaid
-        }
-
-        // Process billing
-        int billId = billingService.processBilling(phone, name, billItems, cashReceived, transactionType, discount);
-
-        if (billId > 0) {
-            System.out.println("\n✓ Bill processed successfully!");
-            System.out.printf("Bill ID: %d%n", billId);
-
-            if (transactionType == TransactionType.IN_STORE) {
-                double change = cashReceived - totalAmount;
-                System.out.printf("Change to return: Rs. %.2f%n", change);
-            }
-
-            // Display the bill template
-            System.out.println("\n" + "=".repeat(50));
-            System.out.println("              BILL RECEIPT");
-            System.out.println("=".repeat(50));
-            billingService.displayBillTemplate(billId);
-
-            // Show file location
-            String filePath = billingService.getBillFilePath(billId);
-            if (filePath != null) {
-                System.out.println("\nBill saved to: " + filePath);
-            }
-
-            System.out.println("Thank you for shopping with SYOS!");
-        } else {
-            System.out.println("✗ Failed to process bill. Please check inventory and try again.");
-        }
-    }
-
     private List<BillItem> collectItems(Scanner scanner, TransactionType transactionType) {
         List<BillItem> items = new ArrayList<>();
 
@@ -252,4 +156,99 @@ public class BillingController {
         }
     }
 
+    private void processTransaction(Scanner scanner, TransactionType transactionType) {
+        System.out.println("\n" + "=".repeat(50));
+        System.out.printf("           %s BILLING%n", transactionType.getValue());
+        System.out.println("=".repeat(50));
+
+        // Collect items
+        List<BillItem> billItems = collectItems(scanner, transactionType);
+        if (billItems.isEmpty()) {
+            System.out.println("✗ No valid items added to bill.");
+            return;
+        }
+
+        // Display bill summary
+        displayBillSummary(billItems);
+
+        // Calculate subtotal
+        double subtotal = billItems.stream()
+                .mapToDouble(item -> item.getQuantity() * billingService.getItemPrice(item.getItemCode()))
+                .sum();
+
+        // Get discount
+        double discount = getDiscountInput(scanner, subtotal);
+        double totalAmount = subtotal - discount;
+
+        // Debug logging
+        logger.debug("\nDiscount entered: {}, \nSubtotal: {}, \nTotal Amount: {}", discount, subtotal, totalAmount);
+
+        // Get customer information
+        System.out.print("Customer phone number: ");
+        String phone = scanner.nextLine().trim();
+
+        if (!isValidPhoneNumber(phone)) {
+            System.out.println("✗ Invalid phone number format. Must be 10 digits.");
+            return;
+        }
+
+        System.out.print("Customer name: ");
+        String name = scanner.nextLine().trim();
+
+        if (name.isEmpty()) {
+            System.out.println("✗ Customer name cannot be empty.");
+            return;
+        }
+
+        // Get payment
+        double cashReceived = 0;
+        if (transactionType == TransactionType.IN_STORE) {
+            System.out.printf("Subtotal: Rs. %.2f%n", subtotal);
+            System.out.printf("Discount: Rs. %.2f%n", discount);
+            System.out.printf("Total amount: Rs. %.2f%n", totalAmount);
+            System.out.print("Cash received: Rs. ");
+
+            try {
+                cashReceived = Double.parseDouble(scanner.nextLine());
+                if (cashReceived < totalAmount) {
+                    System.out.println("✗ Insufficient cash received.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("✗ Invalid amount entered.");
+                return;
+            }
+        } else {
+            cashReceived = totalAmount; // Online transactions are prepaid
+        }
+
+        // Process billing
+        int billId = billingService.processBilling(phone, name, billItems, cashReceived, transactionType, discount);
+
+        if (billId > 0) {
+            System.out.println("\n✓ Bill processed successfully!");
+            System.out.printf("Bill ID: %d%n", billId);
+
+            if (transactionType == TransactionType.IN_STORE) {
+                double change = cashReceived - totalAmount;
+                System.out.printf("Change to return: Rs. %.2f%n", change);
+            }
+
+            // Display the bill template
+            System.out.println("\n" + "=".repeat(50));
+            System.out.println("              BILL RECEIPT");
+            System.out.println("=".repeat(50));
+            billingService.displayBillTemplate(billId);
+
+            // Show file location
+            String filePath = billingService.getBillFilePath(billId);
+            if (filePath != null) {
+                System.out.println("\nBill saved to: " + filePath);
+            }
+
+            System.out.println("Thank you for shopping with SYOS!");
+        } else {
+            System.out.println("✗ Failed to process bill. Please check inventory and try again.");
+        }
+    }
 }

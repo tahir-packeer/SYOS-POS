@@ -1,4 +1,3 @@
-// File: src/main/java/org/example/Main.java
 package org.example;
 
 import org.example.config.DatabaseConnectionFactory;
